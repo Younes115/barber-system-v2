@@ -48,6 +48,42 @@ const routes = {
     tokens: [{"old":"/profile","type":0,"val":"profile","end":""}],
     types: placeholder as Registry['profile.show']['types'],
   },
+  'bookings.store': {
+    methods: ["POST"],
+    pattern: '/bookings',
+    tokens: [{"old":"/bookings","type":0,"val":"bookings","end":""}],
+    types: placeholder as Registry['bookings.store']['types'],
+  },
+  'bookings.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/bookings',
+    tokens: [{"old":"/bookings","type":0,"val":"bookings","end":""}],
+    types: placeholder as Registry['bookings.index']['types'],
+  },
+  'bookings.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/bookings/:id',
+    tokens: [{"old":"/bookings/:id","type":0,"val":"bookings","end":""},{"old":"/bookings/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['bookings.show']['types'],
+  },
+  'bookings.edit': {
+    methods: ["GET","HEAD"],
+    pattern: '/bookings/:id/edit',
+    tokens: [{"old":"/bookings/:id/edit","type":0,"val":"bookings","end":""},{"old":"/bookings/:id/edit","type":1,"val":"id","end":""},{"old":"/bookings/:id/edit","type":0,"val":"edit","end":""}],
+    types: placeholder as Registry['bookings.edit']['types'],
+  },
+  'bookings.update': {
+    methods: ["PUT"],
+    pattern: '/bookings/:id',
+    tokens: [{"old":"/bookings/:id","type":0,"val":"bookings","end":""},{"old":"/bookings/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['bookings.update']['types'],
+  },
+  'bookings.destroy': {
+    methods: ["DELETE"],
+    pattern: '/bookings/:id',
+    tokens: [{"old":"/bookings/:id","type":0,"val":"bookings","end":""},{"old":"/bookings/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['bookings.destroy']['types'],
+  },
   'packages.index': {
     methods: ["GET","HEAD"],
     pattern: '/packages',
@@ -89,6 +125,36 @@ const routes = {
     pattern: '/admin/packages/:id',
     tokens: [{"old":"/admin/packages/:id","type":0,"val":"admin","end":""},{"old":"/admin/packages/:id","type":0,"val":"packages","end":""},{"old":"/admin/packages/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['admin.packages.destroy']['types'],
+  },
+  'admin.bookings.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/bookings',
+    tokens: [{"old":"/admin/bookings","type":0,"val":"admin","end":""},{"old":"/admin/bookings","type":0,"val":"bookings","end":""}],
+    types: placeholder as Registry['admin.bookings.index']['types'],
+  },
+  'admin.bookings.today': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/bookings/today',
+    tokens: [{"old":"/admin/bookings/today","type":0,"val":"admin","end":""},{"old":"/admin/bookings/today","type":0,"val":"bookings","end":""},{"old":"/admin/bookings/today","type":0,"val":"today","end":""}],
+    types: placeholder as Registry['admin.bookings.today']['types'],
+  },
+  'admin.bookings.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/bookings/:id',
+    tokens: [{"old":"/admin/bookings/:id","type":0,"val":"admin","end":""},{"old":"/admin/bookings/:id","type":0,"val":"bookings","end":""},{"old":"/admin/bookings/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['admin.bookings.show']['types'],
+  },
+  'admin.bookings.update_status': {
+    methods: ["PUT"],
+    pattern: '/admin/bookings/:id/status',
+    tokens: [{"old":"/admin/bookings/:id/status","type":0,"val":"admin","end":""},{"old":"/admin/bookings/:id/status","type":0,"val":"bookings","end":""},{"old":"/admin/bookings/:id/status","type":1,"val":"id","end":""},{"old":"/admin/bookings/:id/status","type":0,"val":"status","end":""}],
+    types: placeholder as Registry['admin.bookings.update_status']['types'],
+  },
+  'admin.bookings.force_create': {
+    methods: ["POST"],
+    pattern: '/admin/bookings/force-create',
+    tokens: [{"old":"/admin/bookings/force-create","type":0,"val":"admin","end":""},{"old":"/admin/bookings/force-create","type":0,"val":"bookings","end":""},{"old":"/admin/bookings/force-create","type":0,"val":"force-create","end":""}],
+    types: placeholder as Registry['admin.bookings.force_create']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

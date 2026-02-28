@@ -7,7 +7,7 @@ export default class ProfileController {
 
   async show(ctx: HttpContext) {
     const user = await this.authService.getProfile(ctx)
-    return ctx.inertia.render('profile', {
+    return ctx.inertia.render('profile' as any, {
       user: UserTransformer.transform(user),
     })
   }

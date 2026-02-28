@@ -84,6 +84,72 @@ export interface Registry {
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['show']>>>
     }
   }
+  'bookings.store': {
+    methods: ["POST"]
+    pattern: '/bookings'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/booking').createBookingValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/booking').createBookingValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['store']>>>
+    }
+  }
+  'bookings.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/bookings'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['index']>>>
+    }
+  }
+  'bookings.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/bookings/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['show']>>>
+    }
+  }
+  'bookings.edit': {
+    methods: ["GET","HEAD"]
+    pattern: '/bookings/:id/edit'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['edit']>>>
+    }
+  }
+  'bookings.update': {
+    methods: ["PUT"]
+    pattern: '/bookings/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/booking').updateBookingValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/booking').updateBookingValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['update']>>>
+    }
+  }
+  'bookings.destroy': {
+    methods: ["DELETE"]
+    pattern: '/bookings/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['destroy']>>>
+    }
+  }
   'packages.index': {
     methods: ["GET","HEAD"]
     pattern: '/packages'
@@ -159,6 +225,61 @@ export interface Registry {
       params: { id: ParamValue }
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/packages_controller').default['destroy']>>>
+    }
+  }
+  'admin.bookings.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/bookings'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['adminIndex']>>>
+    }
+  }
+  'admin.bookings.today': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/bookings/today'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['adminToday']>>>
+    }
+  }
+  'admin.bookings.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/bookings/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['adminShow']>>>
+    }
+  }
+  'admin.bookings.update_status': {
+    methods: ["PUT"]
+    pattern: '/admin/bookings/:id/status'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/booking').updateBookingStatusValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/booking').updateBookingStatusValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['updateStatus']>>>
+    }
+  }
+  'admin.bookings.force_create': {
+    methods: ["POST"]
+    pattern: '/admin/bookings/force-create'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/booking').createBookingValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/booking').createBookingValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['forceCreate']>>>
     }
   }
 }

@@ -7,6 +7,45 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class BookingSchema extends BaseModel {
+  static $columns = [
+    'id',
+    'userId',
+    'name',
+    'phone',
+    'date',
+    'time',
+    'services',
+    'status',
+    'overbooked',
+    'createdAt',
+    'updatedAt',
+  ] as const
+  $columns = BookingSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare userId: number
+  @column()
+  declare name: string
+  @column()
+  declare phone: string
+  @column.date()
+  declare date: DateTime
+  @column()
+  declare time: string
+  @column({ columnName: 'services_json', serializeAs: 'services' })
+  declare services: { name: string; price: number; packageId?: number }[]
+  @column()
+  declare status: string
+  @column()
+  declare overbooked: boolean
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class PackageSchema extends BaseModel {
   static $columns = ['id', 'name', 'description', 'price', 'createdAt', 'updatedAt'] as const
   $columns = PackageSchema.$columns
@@ -17,7 +56,7 @@ export class PackageSchema extends BaseModel {
   @column()
   declare description: string
   @column({
-    prepare: (value: number | string) => value,
+    prepare: (value: number) => value,
     consume: (value: string | number) => Number(value),
   })
   declare price: number

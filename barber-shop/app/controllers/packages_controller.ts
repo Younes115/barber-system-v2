@@ -16,7 +16,7 @@ export default class PackagesController {
    */
   async index({ inertia }: HttpContext) {
     const packages = await this.packageService.listPublicPackages()
-    return inertia.render('packages/index', { packages })
+    return inertia.render('packages/index' as any, { packages })
   }
 
   // ─── Admin ───────────────────────────────────────────────────────────────────
@@ -26,14 +26,14 @@ export default class PackagesController {
    */
   async adminIndex({ inertia }: HttpContext) {
     const packages = await this.packageService.listAdminPackages()
-    return inertia.render('admin/packages/index', { packages })
+    return inertia.render('admin/packages/index' as any, { packages })
   }
 
   /**
    * GET /admin/packages/create — render create form.
    */
   async create({ inertia }: HttpContext) {
-    return inertia.render('admin/packages/create', {})
+    return inertia.render('admin/packages/create' as any, {})
   }
 
   /**
@@ -51,7 +51,7 @@ export default class PackagesController {
    */
   async edit(ctx: HttpContext) {
     const pkg = await this.packageService.getPackageOrFail(Number(ctx.params.id))
-    return ctx.inertia.render('admin/packages/edit', { package: pkg.toJSON() })
+    return ctx.inertia.render('admin/packages/edit' as any, { package: pkg.toJSON() })
   }
 
   /**

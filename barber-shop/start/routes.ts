@@ -27,6 +27,14 @@ router
   .group(() => {
     router.post('logout', [controllers.Session, 'destroy']).as('session.destroy')
     router.get('profile', [controllers.Profile, 'show']).as('profile.show')
+
+    // Bookings — authenticated user
+    router.post('bookings', [controllers.Bookings, 'store']).as('bookings.store')
+    router.get('bookings', [controllers.Bookings, 'index']).as('bookings.index')
+    router.get('bookings/:id', [controllers.Bookings, 'show']).as('bookings.show')
+    router.get('bookings/:id/edit', [controllers.Bookings, 'edit']).as('bookings.edit')
+    router.put('bookings/:id', [controllers.Bookings, 'update']).as('bookings.update')
+    router.delete('bookings/:id', [controllers.Bookings, 'destroy']).as('bookings.destroy')
   })
   .use(middleware.auth())
 
@@ -42,6 +50,17 @@ router
     router.get('packages/:id/edit', [controllers.Packages, 'edit']).as('packages.edit')
     router.put('packages/:id', [controllers.Packages, 'update']).as('packages.update')
     router.delete('packages/:id', [controllers.Packages, 'destroy']).as('packages.destroy')
+
+    // Bookings — admin
+    router.get('bookings', [controllers.Bookings, 'adminIndex']).as('bookings.index')
+    router.get('bookings/today', [controllers.Bookings, 'adminToday']).as('bookings.today')
+    router.get('bookings/:id', [controllers.Bookings, 'adminShow']).as('bookings.show')
+    router
+      .put('bookings/:id/status', [controllers.Bookings, 'updateStatus'])
+      .as('bookings.update_status')
+    router
+      .post('bookings/force-create', [controllers.Bookings, 'forceCreate'])
+      .as('bookings.force_create')
   })
   .prefix('admin')
   .as('admin')
