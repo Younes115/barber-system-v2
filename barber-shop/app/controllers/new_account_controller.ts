@@ -1,17 +1,17 @@
-import User from '#models/user'
+import AuthService from '#services/auth_service'
 import { signupValidator } from '#validators/user'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class NewAccountController {
+  private authService = new AuthService()
+
   async create({ inertia }: HttpContext) {
     return inertia.render('auth/signup', {})
   }
 
-  async store({ request, response, auth }: HttpContext) {
-    const payload = await request.validateUsing(signupValidator)
-    const user = await User.create({ ...payload })
-
-    await auth.use('web').login(user)
-    response.redirect().toRoute('home')
+  async store(ctx: HttpContext) {
+    const payload = await ctx.request.validateUsing(signupValidator)
+    await this.authService.signup(ctx, payload)
+    ctx.response.redirect().toRoute('home')
   }
 }

@@ -72,7 +72,6 @@
     "@inertiajs/react": "^2.3.16",
     "@tuyau/core": "^1.0.0",
     "@vinejs/vine": "^4.3.0",
-    "better-sqlite3": "^12.6.2",
     "edge.js": "^6.5.0",
     "luxon": "^3.7.2",
     "pg": "^8.19.0",

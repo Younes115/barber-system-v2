@@ -26,5 +26,6 @@ router
 router
   .group(() => {
     router.post('logout', [controllers.Session, 'destroy'])
+    router.get('profile', [controllers.Profile, 'show']).as('profile.show')
   })
   .use(middleware.auth())

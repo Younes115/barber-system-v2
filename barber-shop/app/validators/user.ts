@@ -1,18 +1,31 @@
 import vine from '@vinejs/vine'
 
 /**
- * Shared rules for email and password.
+ * Egyptian phone number: 01[0125] followed by 8 digits → total 11 digits.
  */
-const email = () => vine.string().email().maxLength(254)
+const phone = () => vine.string().regex(/^01[0125]\d{8}$/)
+
+/**
+ * Password: 8–32 chars.
+ */
 const password = () => vine.string().minLength(8).maxLength(32)
 
 /**
- * Validator to use when performing self-signup
+ * Validator for self-signup (phone-based).
  */
 export const signupValidator = vine.create({
   fullName: vine.string().nullable(),
-  email: email().unique({ table: 'users', column: 'email' }),
+  phone: phone().unique({ table: 'users', column: 'phone' }),
   password: password().confirmed({
     confirmationField: 'passwordConfirmation',
   }),
+})
+
+/**
+ * Validator for login.
+ */
+export const loginValidator = vine.create({
+  phone: phone(),
+  password: vine.string(),
+  rememberMe: vine.boolean().optional(),
 })
