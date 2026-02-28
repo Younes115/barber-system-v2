@@ -1,4 +1,5 @@
 import User from '#models/user'
+import env from '#start/env'
 import type { HttpContext } from '@adonisjs/core/http'
 
 interface SignupPayload {
@@ -25,6 +26,7 @@ export default class AuthService {
       role: 'user',
     })
 
+    await this.ensureAdminRole(user, payload.phone)
     await ctx.auth.use('web').login(user)
     return user
   }
@@ -36,6 +38,7 @@ export default class AuthService {
   async login(ctx: HttpContext, payload: LoginPayload): Promise<User> {
     const user = await User.verifyCredentials(payload.phone, payload.password)
 
+    await this.ensureAdminRole(user, payload.phone)
     await ctx.auth.use('web').login(user, payload.rememberMe ?? false)
     return user
   }
@@ -52,5 +55,21 @@ export default class AuthService {
    */
   async getProfile(ctx: HttpContext): Promise<User> {
     return ctx.auth.getUserOrFail()
+  }
+
+  /**
+   * If ADMIN_PHONE is configured and matches `phone`, promote the user to admin.
+   * Called on both signup and login, so:
+   * - new users with that phone become admin immediately,
+   * - existing users are upgraded on their next login (catch-up path).
+   * Does nothing when ADMIN_PHONE is unset.
+   */
+  private async ensureAdminRole(user: User, phone: string): Promise<void> {
+    const adminPhone = env.get('ADMIN_PHONE')
+    if (!adminPhone || user.role === 'admin') return
+    if (phone === adminPhone) {
+      user.role = 'admin'
+      await user.save()
+    }
   }
 }
