@@ -10,8 +10,25 @@
 import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
+import db from '@adonisjs/lucid/services/db'
 
 router.on('/').renderInertia('home', {}).as('home')
+
+// ─── Health check (public) ──────────────────────────────────────────────────
+router
+  .get('health', async ({ response }) => {
+    let dbOk = false
+    try {
+      await db.rawQuery('SELECT 1')
+      dbOk = true
+    } catch {}
+    return response.ok({
+      status: dbOk ? 'ok' : 'degraded',
+      db: dbOk,
+      timestamp: new Date().toISOString(),
+    })
+  })
+  .as('health')
 
 router
   .group(() => {
@@ -50,6 +67,9 @@ router
     router.get('packages/:id/edit', [controllers.Packages, 'edit']).as('packages.edit')
     router.put('packages/:id', [controllers.Packages, 'update']).as('packages.update')
     router.delete('packages/:id', [controllers.Packages, 'destroy']).as('packages.destroy')
+
+    // Dashboard
+    router.get('dashboard', [controllers.Admin, 'dashboard']).as('dashboard')
 
     // Bookings — admin
     router.get('bookings', [controllers.Bookings, 'adminIndex']).as('bookings.index')

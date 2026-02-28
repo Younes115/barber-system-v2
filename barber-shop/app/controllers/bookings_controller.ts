@@ -6,6 +6,7 @@ import {
 } from '#validators/booking'
 import type { HttpContext } from '@adonisjs/core/http'
 import { type DateTime } from 'luxon'
+import { flashMessages } from '#i18n/messages'
 
 /**
  * BookingsController — thin HTTP/Inertia bridge.
@@ -30,7 +31,7 @@ export default class BookingsController {
       services: payload.services,
     })
 
-    ctx.session.flash('success', 'Booking created successfully')
+    ctx.session.flash('success', flashMessages['booking.created'])
     return ctx.response.redirect().toRoute('bookings.index')
   }
 
@@ -74,7 +75,7 @@ export default class BookingsController {
       services: payload.services,
     })
 
-    ctx.session.flash('success', 'Booking updated successfully')
+    ctx.session.flash('success', flashMessages['booking.updated'])
     return ctx.response.redirect().toRoute('bookings.show', [ctx.params.id])
   }
 
@@ -84,7 +85,7 @@ export default class BookingsController {
   async destroy(ctx: HttpContext) {
     const user = ctx.auth.getUserOrFail()
     await this.bookingService.cancelBookingForUser(user.id, Number(ctx.params.id))
-    ctx.session.flash('success', 'Booking cancelled successfully')
+    ctx.session.flash('success', flashMessages['booking.cancelled'])
     return ctx.response.redirect().toRoute('bookings.index')
   }
 
@@ -121,7 +122,7 @@ export default class BookingsController {
   async updateStatus(ctx: HttpContext) {
     const payload = await ctx.request.validateUsing(updateBookingStatusValidator)
     await this.bookingService.updateBookingStatus(Number(ctx.params.id), payload.status)
-    ctx.session.flash('success', 'Booking status updated')
+    ctx.session.flash('success', flashMessages['booking.status_updated'])
     return ctx.response.redirect().toRoute('admin.bookings.show', [ctx.params.id])
   }
 
@@ -139,7 +140,7 @@ export default class BookingsController {
       services: payload.services,
     })
 
-    ctx.session.flash('success', 'Booking force-created successfully')
+    ctx.session.flash('success', flashMessages['booking.force_created'])
     return ctx.response.redirect().toRoute('admin.bookings.index')
   }
 }

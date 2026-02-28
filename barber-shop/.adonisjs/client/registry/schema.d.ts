@@ -18,6 +18,17 @@ export interface Registry {
       response: unknown
     }
   }
+  'health': {
+    methods: ["GET","HEAD"]
+    pattern: '/health'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
   'new_account.create': {
     methods: ["GET","HEAD"]
     pattern: '/signup'
@@ -225,6 +236,17 @@ export interface Registry {
       params: { id: ParamValue }
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/packages_controller').default['destroy']>>>
+    }
+  }
+  'admin.dashboard': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/dashboard'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/admin_controller').default['dashboard']>>>
     }
   }
   'admin.bookings.index': {

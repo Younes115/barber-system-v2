@@ -13,19 +13,23 @@ const password = () => vine.string().minLength(8).maxLength(32)
 /**
  * Validator for self-signup (phone-based).
  */
-export const signupValidator = vine.create({
-  fullName: vine.string().nullable(),
-  phone: phone().unique({ table: 'users', column: 'phone' }),
-  password: password().confirmed({
-    confirmationField: 'passwordConfirmation',
-  }),
-})
+export const signupValidator = vine.compile(
+  vine.object({
+    fullName: vine.string().nullable(),
+    phone: phone().unique({ table: 'users', column: 'phone' }),
+    password: password().confirmed({
+      confirmationField: 'passwordConfirmation',
+    }),
+  })
+)
 
 /**
  * Validator for login.
  */
-export const loginValidator = vine.create({
-  phone: phone(),
-  password: vine.string(),
-  rememberMe: vine.boolean().optional(),
-})
+export const loginValidator = vine.compile(
+  vine.object({
+    phone: phone(),
+    password: vine.string(),
+    rememberMe: vine.boolean().optional(),
+  })
+)

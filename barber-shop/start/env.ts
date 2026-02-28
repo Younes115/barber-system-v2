@@ -21,6 +21,13 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   /*
   |----------------------------------------------------------
+  | Application name (used in logs, page titles, etc.)
+  |----------------------------------------------------------
+  */
+  APP_NAME: Env.schema.string.optional(),
+
+  /*
+  |----------------------------------------------------------
   | Variables for configuring session package
   |----------------------------------------------------------
   */
@@ -43,4 +50,12 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   ADMIN_PHONE: Env.schema.string.optional(),
+
+  /*
+  |----------------------------------------------------------
+  | Booking configuration overrides (optional)
+  |----------------------------------------------------------
+  */
+  BOOKING_SLOT_CAPACITY: Env.schema.string.optional(),
+  BOOKING_MODIFICATION_CUTOFF_HOURS: Env.schema.string.optional(),
 })

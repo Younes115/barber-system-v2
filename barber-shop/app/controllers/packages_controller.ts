@@ -1,6 +1,7 @@
 import PackageService from '#services/package_service'
 import { createPackageValidator, updatePackageValidator } from '#validators/package'
 import type { HttpContext } from '@adonisjs/core/http'
+import { flashMessages } from '#i18n/messages'
 
 /**
  * PackagesController — thin HTTP/Inertia bridge.
@@ -42,7 +43,7 @@ export default class PackagesController {
   async store(ctx: HttpContext) {
     const payload = await ctx.request.validateUsing(createPackageValidator)
     await this.packageService.createPackage(payload)
-    ctx.session.flash('success', 'Package created successfully')
+    ctx.session.flash('success', flashMessages['package.created'])
     return ctx.response.redirect().toRoute('admin.packages.index')
   }
 
@@ -60,7 +61,7 @@ export default class PackagesController {
   async update(ctx: HttpContext) {
     const payload = await ctx.request.validateUsing(updatePackageValidator)
     await this.packageService.updatePackage(Number(ctx.params.id), payload)
-    ctx.session.flash('success', 'Package updated successfully')
+    ctx.session.flash('success', flashMessages['package.updated'])
     return ctx.response.redirect().toRoute('admin.packages.index')
   }
 
@@ -69,7 +70,7 @@ export default class PackagesController {
    */
   async destroy(ctx: HttpContext) {
     await this.packageService.deletePackage(Number(ctx.params.id))
-    ctx.session.flash('success', 'Package deleted successfully')
+    ctx.session.flash('success', flashMessages['package.deleted'])
     return ctx.response.redirect().toRoute('admin.packages.index')
   }
 }

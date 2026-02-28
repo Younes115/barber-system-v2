@@ -1,6 +1,7 @@
 import User from '#models/user'
 import env from '#start/env'
 import type { HttpContext } from '@adonisjs/core/http'
+import { appLogger } from '#services/logging_service'
 
 interface SignupPayload {
   fullName: string | null
@@ -28,6 +29,13 @@ export default class AuthService {
 
     await this.ensureAdminRole(user, payload.phone)
     await ctx.auth.use('web').login(user)
+
+    appLogger.info({
+      action: 'auth.signup',
+      userId: user.id,
+      ip: ctx.request.ip(),
+    })
+
     return user
   }
 
@@ -36,10 +44,27 @@ export default class AuthService {
    * Optionally create a remember-me token.
    */
   async login(ctx: HttpContext, payload: LoginPayload): Promise<User> {
-    const user = await User.verifyCredentials(payload.phone, payload.password)
+    let user: User
+    try {
+      user = await User.verifyCredentials(payload.phone, payload.password)
+    } catch (error) {
+      appLogger.warn({
+        action: 'auth.login_failed',
+        ip: ctx.request.ip(),
+        extra: { phone: payload.phone },
+      })
+      throw error
+    }
 
     await this.ensureAdminRole(user, payload.phone)
     await ctx.auth.use('web').login(user, payload.rememberMe ?? false)
+
+    appLogger.info({
+      action: 'auth.login',
+      userId: user.id,
+      ip: ctx.request.ip(),
+    })
+
     return user
   }
 
@@ -70,6 +95,12 @@ export default class AuthService {
     if (phone === adminPhone) {
       user.role = 'admin'
       await user.save()
+
+      appLogger.info({
+        action: 'auth.admin_promoted',
+        userId: user.id,
+        extra: { phone },
+      })
     }
   }
 }

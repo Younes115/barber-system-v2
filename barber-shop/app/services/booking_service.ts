@@ -2,6 +2,8 @@ import Booking from '#models/booking'
 import type User from '#models/user'
 import bookingConfig from '#config/booking'
 import { DateTime } from 'luxon'
+import { domainMessages, t } from '#i18n/messages'
+import { appLogger } from '#services/logging_service'
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
@@ -57,12 +59,12 @@ export default class BookingService {
     const now = DateTime.now().setZone(bookingConfig.businessTimezone)
 
     if (appointmentDt <= now) {
-      throw new BookingDomainError('Cannot book a time slot in the past')
+      throw new BookingDomainError(domainMessages['booking.past_slot'])
     }
 
     await this.assertCapacity(date, time)
 
-    return Booking.create({
+    const booking = await Booking.create({
       userId: user.id,
       name: user.fullName ?? user.phone,
       phone: user.phone,
@@ -72,6 +74,9 @@ export default class BookingService {
       status: 'pending',
       overbooked: false,
     })
+
+    appLogger.info({ action: 'booking.created', userId: user.id, bookingId: booking.id })
+    return booking
   }
 
   /**
@@ -119,7 +124,7 @@ export default class BookingService {
     if (payload.date || payload.time) {
       const newAppointment = this.getAppointmentDateTime(newDate as DateTime, newTime)
       if (newAppointment <= now) {
-        throw new BookingDomainError('Cannot move booking to a time slot in the past')
+        throw new BookingDomainError(domainMessages['booking.move_to_past'])
       }
       await this.assertCapacity(newDate as DateTime, newTime, booking.id)
     }
@@ -128,6 +133,8 @@ export default class BookingService {
     if (payload.time) booking.time = payload.time
     if (payload.services) booking.services = payload.services as any
     await booking.save()
+
+    appLogger.info({ action: 'booking.updated', userId: booking.userId, bookingId: booking.id })
     return booking
   }
 
@@ -142,6 +149,8 @@ export default class BookingService {
 
     booking.status = 'cancelled'
     await booking.save()
+
+    appLogger.info({ action: 'booking.cancelled', userId: booking.userId, bookingId: booking.id })
     return booking
   }
 
@@ -203,11 +212,17 @@ export default class BookingService {
 
     // Disallow re-opening completed or no-show bookings
     if (['completed', 'no_show'].includes(booking.status) && status === 'pending') {
-      throw new BookingDomainError('Cannot revert a completed or no-show booking to pending')
+      throw new BookingDomainError(domainMessages['booking.invalid_status_transition'])
     }
 
     booking.status = status
     await booking.save()
+
+    appLogger.info({
+      action: 'booking.status_updated',
+      bookingId: booking.id,
+      extra: { from: booking.status, to: status },
+    })
     return booking
   }
 
@@ -227,7 +242,7 @@ export default class BookingService {
       await this.assertCapacity(date, time)
     }
 
-    return Booking.create({
+    const booking = await Booking.create({
       userId: user.id,
       name: user.fullName ?? user.phone,
       phone: user.phone,
@@ -237,6 +252,14 @@ export default class BookingService {
       status: 'confirmed',
       overbooked,
     })
+
+    appLogger.warn({
+      action: 'booking.force_created',
+      userId: user.id,
+      bookingId: booking.id,
+      extra: { overbooked },
+    })
+    return booking
   }
 
   // ─── Private Helpers ────────────────────────────────────────────────────────
@@ -271,7 +294,7 @@ export default class BookingService {
   private async assertCapacity(date: DateTime, time: string, excludeId?: number): Promise<void> {
     const count = await this.countBookingsForSlot(date, time, excludeId)
     if (count >= bookingConfig.defaultSlotCapacity) {
-      throw new BookingDomainError('This time slot is fully booked. Please choose another time.')
+      throw new BookingDomainError(domainMessages['booking.slot_full'])
     }
   }
 
@@ -292,17 +315,19 @@ export default class BookingService {
    */
   private assertModifiable(booking: Booking, now: DateTime): void {
     if (!bookingConfig.modificationEnabled) {
-      throw new BookingDomainError('Booking modifications are currently disabled', 403)
+      throw new BookingDomainError(domainMessages['booking.modifications_disabled'], 403)
     }
 
     if (['cancelled', 'completed', 'no_show'].includes(booking.status)) {
-      throw new BookingDomainError('This booking can no longer be modified')
+      throw new BookingDomainError(domainMessages['booking.not_modifiable'])
     }
 
     const hoursUntil = booking.appointmentDateTime.diff(now, 'hours').hours
     if (hoursUntil < bookingConfig.modificationCutoffHours) {
       throw new BookingDomainError(
-        `Bookings can only be modified at least ${bookingConfig.modificationCutoffHours} hours before the appointment`
+        t(domainMessages['booking.cutoff_passed'], {
+          hours: bookingConfig.modificationCutoffHours,
+        })
       )
     }
   }

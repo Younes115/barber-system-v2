@@ -3,6 +3,7 @@ import type { routes } from './index.ts'
 
 export interface ApiDefinition {
   home: typeof routes['home']
+  health: typeof routes['health']
   newAccount: {
     create: typeof routes['new_account.create']
     store: typeof routes['new_account.store']
@@ -35,6 +36,7 @@ export interface ApiDefinition {
       update: typeof routes['admin.packages.update']
       destroy: typeof routes['admin.packages.destroy']
     }
+    dashboard: typeof routes['admin.dashboard']
     bookings: {
       index: typeof routes['admin.bookings.index']
       today: typeof routes['admin.bookings.today']

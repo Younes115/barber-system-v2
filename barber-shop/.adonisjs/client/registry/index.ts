@@ -12,6 +12,12 @@ const routes = {
     tokens: [{"old":"/","type":0,"val":"/","end":""}],
     types: placeholder as Registry['home']['types'],
   },
+  'health': {
+    methods: ["GET","HEAD"],
+    pattern: '/health',
+    tokens: [{"old":"/health","type":0,"val":"health","end":""}],
+    types: placeholder as Registry['health']['types'],
+  },
   'new_account.create': {
     methods: ["GET","HEAD"],
     pattern: '/signup',
@@ -125,6 +131,12 @@ const routes = {
     pattern: '/admin/packages/:id',
     tokens: [{"old":"/admin/packages/:id","type":0,"val":"admin","end":""},{"old":"/admin/packages/:id","type":0,"val":"packages","end":""},{"old":"/admin/packages/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['admin.packages.destroy']['types'],
+  },
+  'admin.dashboard': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/dashboard',
+    tokens: [{"old":"/admin/dashboard","type":0,"val":"admin","end":""},{"old":"/admin/dashboard","type":0,"val":"dashboard","end":""}],
+    types: placeholder as Registry['admin.dashboard']['types'],
   },
   'admin.bookings.index': {
     methods: ["GET","HEAD"],

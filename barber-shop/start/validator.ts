@@ -13,6 +13,9 @@
 
 import { DateTime } from 'luxon'
 import { VineDate } from '@vinejs/vine'
+import vine from '@vinejs/vine'
+import { SimpleMessagesProvider } from '@vinejs/vine'
+import { vineMessages } from '#i18n/messages'
 
 declare module '@vinejs/vine/types' {
   interface VineGlobalTransforms {
@@ -21,3 +24,8 @@ declare module '@vinejs/vine/types' {
 }
 
 VineDate.transform((value) => DateTime.fromJSDate(value))
+
+/**
+ * Set global Arabic messages provider for all VineJS validators.
+ */
+vine.messagesProvider = new SimpleMessagesProvider(vineMessages)

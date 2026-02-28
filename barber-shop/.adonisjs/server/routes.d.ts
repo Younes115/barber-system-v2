@@ -5,6 +5,7 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'home': { paramsTuple?: []; params?: {} }
+    'health': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'new_account.store': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
@@ -24,6 +25,7 @@ export type ScannedRoutes = {
     'admin.packages.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.packages.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.packages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.dashboard': { paramsTuple?: []; params?: {} }
     'admin.bookings.index': { paramsTuple?: []; params?: {} }
     'admin.bookings.today': { paramsTuple?: []; params?: {} }
     'admin.bookings.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -32,6 +34,7 @@ export type ScannedRoutes = {
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
+    'health': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
@@ -42,12 +45,14 @@ export type ScannedRoutes = {
     'admin.packages.index': { paramsTuple?: []; params?: {} }
     'admin.packages.create': { paramsTuple?: []; params?: {} }
     'admin.packages.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.dashboard': { paramsTuple?: []; params?: {} }
     'admin.bookings.index': { paramsTuple?: []; params?: {} }
     'admin.bookings.today': { paramsTuple?: []; params?: {} }
     'admin.bookings.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
+    'health': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
@@ -58,6 +63,7 @@ export type ScannedRoutes = {
     'admin.packages.index': { paramsTuple?: []; params?: {} }
     'admin.packages.create': { paramsTuple?: []; params?: {} }
     'admin.packages.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.dashboard': { paramsTuple?: []; params?: {} }
     'admin.bookings.index': { paramsTuple?: []; params?: {} }
     'admin.bookings.today': { paramsTuple?: []; params?: {} }
     'admin.bookings.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

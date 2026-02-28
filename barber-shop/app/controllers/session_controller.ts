@@ -11,8 +11,13 @@ export default class SessionController {
 
   async store(ctx: HttpContext) {
     const payload = await ctx.request.validateUsing(loginValidator)
-    await this.authService.login(ctx, payload)
-    ctx.response.redirect().toRoute('home')
+    const user = await this.authService.login(ctx, payload)
+
+    // Redirect admins to dashboard, regular users to home
+    if (user.isAdmin) {
+      return ctx.response.redirect().toRoute('admin.dashboard')
+    }
+    return ctx.response.redirect().toRoute('home')
   }
 
   async destroy(ctx: HttpContext) {
