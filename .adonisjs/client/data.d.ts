@@ -6,10 +6,20 @@
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps } from '@adonisjs/inertia/types'
+import type BookingTransformer from '#transformers/booking_transformer'
+import type PackageTransformer from '#transformers/package_transformer'
 import type UserTransformer from '#transformers/user_transformer'
 import type InertiaMiddleware from '#middleware/inertia_middleware'
 
 export namespace Data {
+  export type Booking = InferData<BookingTransformer>
+  export namespace Booking {
+    export type Variants = InferVariants<BookingTransformer>
+  }
+  export type Package = InferData<PackageTransformer>
+  export namespace Package {
+    export type Variants = InferVariants<PackageTransformer>
+  }
   export type User = InferData<UserTransformer>
   export namespace User {
     export type Variants = InferVariants<UserTransformer>

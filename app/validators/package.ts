@@ -8,6 +8,7 @@ export const createPackageValidator = vine.compile(
     name: vine.string().minLength(1).maxLength(150).trim(),
     description: vine.string().minLength(1).maxLength(1000).trim(),
     price: vine.number().positive(),
+    duration: vine.number().positive().optional(),
   })
 )
 
@@ -20,5 +21,6 @@ export const updatePackageValidator = vine.compile(
     name: vine.string().minLength(1).maxLength(150).trim().optional(),
     description: vine.string().minLength(1).maxLength(1000).trim().optional(),
     price: vine.number().positive().optional(),
+    duration: vine.number().positive().optional(),
   })
 )

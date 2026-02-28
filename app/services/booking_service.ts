@@ -70,7 +70,7 @@ export default class BookingService {
       phone: user.phone,
       date: date,
       time,
-      services: services as any,
+      servicesJson: services,
       status: 'pending',
       overbooked: false,
     })
@@ -131,7 +131,7 @@ export default class BookingService {
 
     if (payload.date) booking.date = payload.date
     if (payload.time) booking.time = payload.time
-    if (payload.services) booking.services = payload.services as any
+    if (payload.services) booking.servicesJson = payload.services
     await booking.save()
 
     appLogger.info({ action: 'booking.updated', userId: booking.userId, bookingId: booking.id })
@@ -248,7 +248,7 @@ export default class BookingService {
       phone: user.phone,
       date: date,
       time,
-      services: services as any,
+      servicesJson: services,
       status: 'confirmed',
       overbooked,
     })

@@ -18,6 +18,17 @@ export interface Registry {
       response: unknown
     }
   }
+  'contact': {
+    methods: ["GET","HEAD"]
+    pattern: '/contact'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
   'health': {
     methods: ["GET","HEAD"]
     pattern: '/health'
@@ -93,6 +104,17 @@ export interface Registry {
       params: {}
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/profile_controller').default['show']>>>
+    }
+  }
+  'bookings.create': {
+    methods: ["GET","HEAD"]
+    pattern: '/bookings/create'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/bookings_controller').default['create']>>>
     }
   }
   'bookings.store': {

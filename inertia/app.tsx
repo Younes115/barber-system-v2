@@ -8,10 +8,10 @@ import { createInertiaApp } from '@inertiajs/react'
 import { TuyauProvider } from '@adonisjs/inertia/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 
-const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
+const appName = 'صالون الحلاقة'
 
 createInertiaApp({
-  title: (title) => (title ? `${title} - ${appName}` : appName),
+  title: (title) => (title ? `${title} — ${appName}` : appName),
   resolve: (name) => {
     return resolvePageComponent(
       `./pages/${name}.tsx`,
@@ -20,6 +20,11 @@ createInertiaApp({
     )
   },
   setup({ el, App, props }) {
+    // Ensure Arabic RTL + dark mode on the root HTML element
+    document.documentElement.lang = 'ar'
+    document.documentElement.dir = 'rtl'
+    document.documentElement.classList.add('dark')
+
     createRoot(el).render(
       <TuyauProvider client={client}>
         <App {...props} />
@@ -27,6 +32,6 @@ createInertiaApp({
     )
   },
   progress: {
-    color: '#4B5563',
+    color: '#D4A843',
   },
 })

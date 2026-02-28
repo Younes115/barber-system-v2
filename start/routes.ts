@@ -12,7 +12,17 @@ import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 import db from '@adonisjs/lucid/services/db'
 
-router.on('/').renderInertia('home', {}).as('home')
+router
+  .get('/', async ({ inertia }) => {
+    const PackageService = (await import('#services/package_service')).default
+    const PackageTransformer = (await import('#transformers/package_transformer')).default
+    const packages = await new PackageService().listPublicPackages()
+    return inertia.render('home', {
+      packages: PackageTransformer.transform(packages),
+    })
+  })
+  .as('home')
+router.on('/contact').renderInertia('contact', {}).as('contact')
 
 // ─── Health check (public) ──────────────────────────────────────────────────
 router
@@ -21,7 +31,7 @@ router
     try {
       await db.rawQuery('SELECT 1')
       dbOk = true
-    } catch {}
+    } catch { }
     return response.ok({
       status: dbOk ? 'ok' : 'degraded',
       db: dbOk,
@@ -46,6 +56,7 @@ router
     router.get('profile', [controllers.Profile, 'show']).as('profile.show')
 
     // Bookings — authenticated user
+    router.get('bookings/create', [controllers.Bookings, 'create']).as('bookings.create')
     router.post('bookings', [controllers.Bookings, 'store']).as('bookings.store')
     router.get('bookings', [controllers.Bookings, 'index']).as('bookings.index')
     router.get('bookings/:id', [controllers.Bookings, 'show']).as('bookings.show')

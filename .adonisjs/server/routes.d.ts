@@ -5,6 +5,7 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'home': { paramsTuple?: []; params?: {} }
+    'contact': { paramsTuple?: []; params?: {} }
     'health': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'new_account.store': { paramsTuple?: []; params?: {} }
@@ -12,6 +13,7 @@ export type ScannedRoutes = {
     'session.store': { paramsTuple?: []; params?: {} }
     'session.destroy': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
+    'bookings.create': { paramsTuple?: []; params?: {} }
     'bookings.store': { paramsTuple?: []; params?: {} }
     'bookings.index': { paramsTuple?: []; params?: {} }
     'bookings.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -34,10 +36,12 @@ export type ScannedRoutes = {
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
+    'contact': { paramsTuple?: []; params?: {} }
     'health': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
+    'bookings.create': { paramsTuple?: []; params?: {} }
     'bookings.index': { paramsTuple?: []; params?: {} }
     'bookings.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'bookings.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -52,10 +56,12 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
+    'contact': { paramsTuple?: []; params?: {} }
     'health': { paramsTuple?: []; params?: {} }
     'new_account.create': { paramsTuple?: []; params?: {} }
     'session.create': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
+    'bookings.create': { paramsTuple?: []; params?: {} }
     'bookings.index': { paramsTuple?: []; params?: {} }
     'bookings.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'bookings.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

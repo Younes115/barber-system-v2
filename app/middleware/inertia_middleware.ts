@@ -16,12 +16,17 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
     const { session, auth } = ctx as Partial<HttpContext>
 
     /**
-     * Fetching the first error from the flash messages
+     * Fetching the first error from the flash messages.
+     * Domain errors are flashed under the 'error' key;
+     * validation / other errors live in 'errorsBag'.
      */
     const errorsBag = session?.flashMessages.get('errorsBag') ?? {}
-    const error: string | undefined = Object.keys(errorsBag)
+    const errorFromBag: string | undefined = Object.keys(errorsBag)
       .filter((code) => code !== 'E_VALIDATION_ERROR')
       .map((code) => errorsBag[code])[0]
+
+    const error: string | undefined =
+      (session?.flashMessages.get('error') as string | undefined) ?? errorFromBag
 
     /**
      * Data shared with all Inertia pages. Make sure you are using
@@ -31,6 +36,7 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       errors: ctx.inertia.always(this.getValidationErrors(ctx)),
       flash: ctx.inertia.always({
         error: error,
+        success: session?.flashMessages.get('success') as string | undefined,
       }),
       user: ctx.inertia.always(auth?.user ? UserTransformer.transform(auth.user) : undefined),
     }
@@ -48,5 +54,5 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
 
 declare module '@adonisjs/inertia/types' {
   type MiddlewareSharedProps = InferSharedProps<InertiaMiddleware>
-  export interface SharedProps extends MiddlewareSharedProps {}
+  export interface SharedProps extends MiddlewareSharedProps { }
 }

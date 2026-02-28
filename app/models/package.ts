@@ -12,6 +12,6 @@ export default class Package extends PackageSchema {
    * the getter coerces to a fixed-precision number string.
    */
   get formattedPrice() {
-    return this.price.toFixed(2)
+    return parseFloat(this.price).toFixed(2)
   }
 }

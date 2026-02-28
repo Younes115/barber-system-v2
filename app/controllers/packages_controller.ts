@@ -2,6 +2,7 @@ import PackageService from '#services/package_service'
 import { createPackageValidator, updatePackageValidator } from '#validators/package'
 import type { HttpContext } from '@adonisjs/core/http'
 import { flashMessages } from '#i18n/messages'
+import PackageTransformer from '#transformers/package_transformer'
 
 /**
  * PackagesController — thin HTTP/Inertia bridge.
@@ -17,7 +18,9 @@ export default class PackagesController {
    */
   async index({ inertia }: HttpContext) {
     const packages = await this.packageService.listPublicPackages()
-    return inertia.render('packages/index' as any, { packages })
+    return inertia.render('packages/index', {
+      packages: PackageTransformer.transform(packages),
+    })
   }
 
   // ─── Admin ───────────────────────────────────────────────────────────────────
@@ -27,7 +30,9 @@ export default class PackagesController {
    */
   async adminIndex({ inertia }: HttpContext) {
     const packages = await this.packageService.listAdminPackages()
-    return inertia.render('admin/packages/index' as any, { packages })
+    return inertia.render('admin/packages/index' as any, {
+      packages: PackageTransformer.transform(packages),
+    })
   }
 
   /**
@@ -52,7 +57,9 @@ export default class PackagesController {
    */
   async edit(ctx: HttpContext) {
     const pkg = await this.packageService.getPackageOrFail(Number(ctx.params.id))
-    return ctx.inertia.render('admin/packages/edit' as any, { package: pkg.toJSON() })
+    return ctx.inertia.render('admin/packages/edit' as any, {
+      package: PackageTransformer.transform(pkg),
+    })
   }
 
   /**

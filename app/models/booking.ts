@@ -1,6 +1,6 @@
 import { BookingSchema } from '#database/schema'
 import User from '#models/user'
-import { belongsTo } from '@adonisjs/lucid/orm'
+import { belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
 import bookingConfig from '#config/booking'
@@ -11,6 +11,12 @@ import bookingConfig from '#config/booking'
  * in BookingService — this model exposes only domain helpers.
  */
 export default class Booking extends BookingSchema {
+  @column({
+    prepare: (value: any) => (typeof value === 'string' ? value : JSON.stringify(value)),
+    consume: (value: any) => (typeof value === 'string' ? JSON.parse(value) : value),
+  })
+  declare servicesJson: any
+
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 

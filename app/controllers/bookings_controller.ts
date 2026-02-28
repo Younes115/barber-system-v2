@@ -7,6 +7,9 @@ import {
 import type { HttpContext } from '@adonisjs/core/http'
 import { type DateTime } from 'luxon'
 import { flashMessages } from '#i18n/messages'
+import BookingTransformer from '#transformers/booking_transformer'
+import PackageTransformer from '#transformers/package_transformer'
+import PackageService from '#services/package_service'
 
 /**
  * BookingsController — thin HTTP/Inertia bridge.
@@ -14,8 +17,20 @@ import { flashMessages } from '#i18n/messages'
  */
 export default class BookingsController {
   private bookingService = new BookingService()
+  private packageService = new PackageService()
 
   // ─── User Endpoints ─────────────────────────────────────────────────────────
+
+  /**
+   * GET /bookings/create — render booking creation form.
+   */
+  async create(ctx: HttpContext) {
+    const packages = await this.packageService.listPublicPackages()
+    return ctx.inertia.render('bookings/create' as any, {
+      packages: PackageTransformer.transform(packages),
+      timeSlots: this.getTimeSlots(),
+    })
+  }
 
   /**
    * POST /bookings — create a new booking for the authenticated user.
@@ -41,7 +56,9 @@ export default class BookingsController {
   async index(ctx: HttpContext) {
     const user = ctx.auth.getUserOrFail()
     const bookings = await this.bookingService.listUserBookings(user.id)
-    return ctx.inertia.render('bookings/index' as any, { bookings })
+    return ctx.inertia.render('bookings/index' as any, {
+      bookings: BookingTransformer.transform(bookings),
+    })
   }
 
   /**
@@ -50,7 +67,9 @@ export default class BookingsController {
   async show(ctx: HttpContext) {
     const user = ctx.auth.getUserOrFail()
     const booking = await this.bookingService.getUserBookingOrFail(user.id, Number(ctx.params.id))
-    return ctx.inertia.render('bookings/show' as any, { booking: booking.toJSON() })
+    return ctx.inertia.render('bookings/show' as any, {
+      booking: BookingTransformer.transform(booking),
+    })
   }
 
   /**
@@ -59,7 +78,12 @@ export default class BookingsController {
   async edit(ctx: HttpContext) {
     const user = ctx.auth.getUserOrFail()
     const booking = await this.bookingService.getUserBookingOrFail(user.id, Number(ctx.params.id))
-    return ctx.inertia.render('bookings/edit' as any, { booking: booking.toJSON() })
+    const packages = await this.packageService.listPublicPackages()
+    return ctx.inertia.render('bookings/edit' as any, {
+      booking: BookingTransformer.transform(booking),
+      packages: PackageTransformer.transform(packages),
+      timeSlots: this.getTimeSlots(),
+    })
   }
 
   /**
@@ -97,7 +121,9 @@ export default class BookingsController {
   async adminIndex(ctx: HttpContext) {
     const status = ctx.request.input('status')
     const bookings = await this.bookingService.listAdminBookings({ status })
-    return ctx.inertia.render('admin/bookings/index' as any, { bookings })
+    return ctx.inertia.render('admin/bookings/index' as any, {
+      bookings: BookingTransformer.transform(bookings),
+    })
   }
 
   /**
@@ -105,15 +131,19 @@ export default class BookingsController {
    */
   async adminToday(ctx: HttpContext) {
     const bookings = await this.bookingService.listAdminTodayBookings()
-    return ctx.inertia.render('admin/bookings/today' as any, { bookings })
+    return ctx.inertia.render('admin/bookings/today' as any, {
+      bookings: BookingTransformer.transform(bookings),
+    })
   }
 
   /**
    * GET /admin/bookings/:id — show any booking details (admin).
    */
-  async adminShow(ctx: HttpContext) {
-    const booking = await this.bookingService.getBookingOrFail(Number(ctx.params.id))
-    return ctx.inertia.render('admin/bookings/show' as any, { booking: booking.toJSON() })
+  async adminShow({ serialize, inertia, params }: HttpContext) {
+    const booking = await this.bookingService.getBookingOrFail(Number(params.id))
+    return inertia.render('admin/bookings/show' as any, {
+      booking: BookingTransformer.transform(booking),
+    })
   }
 
   /**
@@ -142,5 +172,16 @@ export default class BookingsController {
 
     ctx.session.flash('success', flashMessages['booking.force_created'])
     return ctx.response.redirect().toRoute('admin.bookings.index')
+  }
+
+  // ─── Helpers ──────────────────────────────────────────────────────────────
+
+  private getTimeSlots(): string[] {
+    const slots: string[] = []
+    for (let h = 9; h <= 20; h++) {
+      slots.push(`${String(h).padStart(2, '0')}:00`)
+      slots.push(`${String(h).padStart(2, '0')}:30`)
+    }
+    return slots
   }
 }

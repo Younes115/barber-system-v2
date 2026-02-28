@@ -8,19 +8,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class BookingSchema extends BaseModel {
-  static $columns = [
-    'id',
-    'userId',
-    'name',
-    'phone',
-    'date',
-    'time',
-    'services',
-    'status',
-    'overbooked',
-    'createdAt',
-    'updatedAt',
-  ] as const
+  static $columns = ['id', 'userId', 'name', 'phone', 'date', 'time', 'servicesJson', 'status', 'overbooked', 'createdAt', 'updatedAt'] as const
   $columns = BookingSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -34,8 +22,8 @@ export class BookingSchema extends BaseModel {
   declare date: DateTime
   @column()
   declare time: string
-  @column({ columnName: 'services_json', serializeAs: 'services' })
-  declare services: { name: string; price: number; packageId?: number }[]
+  @column()
+  declare servicesJson: any
   @column()
   declare status: string
   @column()
@@ -47,7 +35,7 @@ export class BookingSchema extends BaseModel {
 }
 
 export class PackageSchema extends BaseModel {
-  static $columns = ['id', 'name', 'description', 'price', 'createdAt', 'updatedAt'] as const
+  static $columns = ['id', 'name', 'description', 'price', 'createdAt', 'updatedAt', 'duration'] as const
   $columns = PackageSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -55,15 +43,14 @@ export class PackageSchema extends BaseModel {
   declare name: string
   @column()
   declare description: string
-  @column({
-    prepare: (value: number) => value,
-    consume: (value: string | number) => Number(value),
-  })
-  declare price: number
+  @column()
+  declare price: string
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+  @column()
+  declare duration: number | null
 }
 
 export class RememberMeTokenSchema extends BaseModel {
@@ -84,16 +71,7 @@ export class RememberMeTokenSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = [
-    'id',
-    'fullName',
-    'phone',
-    'email',
-    'password',
-    'role',
-    'createdAt',
-    'updatedAt',
-  ] as const
+  static $columns = ['id', 'fullName', 'phone', 'email', 'password', 'role', 'createdAt', 'updatedAt'] as const
   $columns = UserSchema.$columns
   @column({ isPrimary: true })
   declare id: number

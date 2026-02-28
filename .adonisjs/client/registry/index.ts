@@ -12,6 +12,12 @@ const routes = {
     tokens: [{"old":"/","type":0,"val":"/","end":""}],
     types: placeholder as Registry['home']['types'],
   },
+  'contact': {
+    methods: ["GET","HEAD"],
+    pattern: '/contact',
+    tokens: [{"old":"/contact","type":0,"val":"contact","end":""}],
+    types: placeholder as Registry['contact']['types'],
+  },
   'health': {
     methods: ["GET","HEAD"],
     pattern: '/health',
@@ -53,6 +59,12 @@ const routes = {
     pattern: '/profile',
     tokens: [{"old":"/profile","type":0,"val":"profile","end":""}],
     types: placeholder as Registry['profile.show']['types'],
+  },
+  'bookings.create': {
+    methods: ["GET","HEAD"],
+    pattern: '/bookings/create',
+    tokens: [{"old":"/bookings/create","type":0,"val":"bookings","end":""},{"old":"/bookings/create","type":0,"val":"create","end":""}],
+    types: placeholder as Registry['bookings.create']['types'],
   },
   'bookings.store': {
     methods: ["POST"],
